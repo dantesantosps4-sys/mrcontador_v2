@@ -123,18 +123,27 @@ async function api(url, options={}){
 
 async function register(){
     const form = new FormData();
-    form.append("username", username.value);
-    form.append("senha", senha.value);
+    form.append("username", document.getElementById("username").value.trim());
+    form.append("senha", document.getElementById("senha").value.trim());
 
-    const r = await fetch("/register", {method:"POST", body:form});
+    const r = await fetch("/register", {
+        method: "POST",
+        body: form
+    });
+
     const d = await r.json();
 
-    if(!d.ok){ alert(d.erro || "Erro ao criar conta"); return; }
+    if(!d.ok){
+        alert(d.erro || "Erro ao criar conta");
+        return;
+    }
 
     token = d.token;
     usernameAtual = d.username;
+
     localStorage.setItem("token", token);
     localStorage.setItem("username", usernameAtual);
+
     mostrarApp();
 }
 
