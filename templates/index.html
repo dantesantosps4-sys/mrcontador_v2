@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MR Contador</title>
+<link rel="stylesheet" href="/static/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+<section class="hero">
+    <h1>MR Contador</h1>
+    <p>IA financeira com login, filtro mensal, gráfico, avisos e 60 perguntas inteligentes.</p>
+</section>
+
+<section id="loginBox" class="card">
+    <h2>Entrar ou criar conta</h2>
+    <input id="username" placeholder="Usuário">
+    <input id="senha" type="password" placeholder="Senha">
+    <div class="grid">
+        <button onclick="login()">Entrar</button>
+        <button class="secondary" onclick="register()">Criar conta</button>
+    </div>
+</section>
+
+<div id="appBox" style="display:none">
+
+<section class="card">
+    <h2 id="userLabel">Usuário</h2>
+    <div id="saldo" class="saldo">R$ 0,00</div>
+    <div class="grid">
+        <div class="box"><span>Entradas</span><b id="entradas">R$ 0,00</b></div>
+        <div class="box"><span>Gastos</span><b id="gastos">R$ 0,00</b></div>
+    </div>
+    <div id="alertas" class="alerts"></div>
+    <button class="danger" onclick="sair()">Sair</button>
+</section>
+
+<section class="card">
+    <h2>Filtro mensal</h2>
+    <input id="mes" type="month">
+    <div class="grid">
+        <button onclick="carregar()">Aplicar</button>
+        <button class="secondary" onclick="limparMes()">Ver tudo</button>
+    </div>
+</section>
+
+<section class="tabs">
+    <button id="btndash" class="active" onclick="abrir('dash')">Dashboard</button>
+    <button id="btnia" onclick="abrir('ia')">IA Financeira</button>
+</section>
+
+<div id="dash" class="page active">
+
+<section class="card">
+    <h2>Nova transação</h2>
+    <input id="descricao" placeholder="Ex: mercado, salário, Netflix">
+    <input id="valor" type="number" step="0.01" placeholder="Valor">
+    <select id="tipo">
+        <option value="gasto">Gasto</option>
+        <option value="entrada">Entrada</option>
+    </select>
+    <button onclick="salvar()">Salvar transação</button>
+    <p id="catDetectada" class="muted"></p>
+</section>
+
+<section class="card">
+    <h2>Resumo por categoria</h2>
+    <canvas id="grafico"></canvas>
+</section>
+
+<section class="card">
+    <h2>Histórico</h2>
+    <div id="historico"></div>
+</section>
+
+</div>
+
+<div id="ia" class="page">
+<section class="card">
+    <h2>60 perguntas inteligentes</h2>
+    <p class="muted">Clique em uma pergunta. A resposta aparece em popup.</p>
+    <div id="perguntas"></div>
+</section>
+</div>
+
+</div>
+
+</div>
+
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <button class="close" onclick="fecharModal()">×</button>
+        <h2>Resposta da IA</h2>
+        <p id="textoResposta"></p>
+    </div>
+</div>
+
+<script>
+let token = localStorage.getItem("token") || "";
+let usernameAtual = localStorage.getItem("username") || "";
+let chart = null;
+
+function dinheiro(v){
+    return Number(v || 0).toLocaleString("pt-BR", {style:"currency", currency:"BRL"});
+}
+
+async function api(url, options={}){
+    options.headers = options.headers || {};
+    if(token) options.headers["Authorization"] = "Bearer " + token;
+    return fetch(url, options);
+}
+
+async function register(){
+    const form = new FormData();
+    form.append("username", username.value);
+    form.append("senha", senha.value);
+
+    const r = await fetch("/register", {method:"POST", body:form});
+    const d = await r.json();
+
+    if(!d.ok){ alert(d.erro); return; }
+
+    token = d.token;
+    usernameAtual = d.username;
+    localStorage.setItem("token", token);
+    localStorage.setItem("username", usernameAtual);
+    mostrarApp();
+}
+
+async function login(){
+    const form = new FormData();
+    form.append("username", username.value);
+    form.append("senha", senha.value);
+
+    const r = await fetch("/login", {method:"POST", body:form});
+    const d = await r.json();
+
+    if(!d.ok){ alert("Login inválido"); return; }
+
+    token = d.token;
+    usernameAtual = d.username;
+    localStorage.setItem("token", token);
+    localStorage.setItem("username", usernameAtual);
+    mostrarApp();
+}
+
+function mostrarApp(){
+    loginBox.style.display = "none";
+    appBox.style.display = "block";
+    userLabel.innerText = "Usuário: " + usernameAtual;
+    carregar();
+}
+
+function sair(){
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    location.reload();
+}
+
+async function salvar(){
+    const form = new FormData();
+    form.append("descricao", descricao.value);
+    form.append("valor", valor.value);
+    form.append("tipo", tipo.value);
+
+    const r = await api("/add", {method:"POST", body:form});
+    if(!r.ok){ alert("Erro ao salvar"); return; }
+
+    descricao.value = "";
+    valor.value = "";
+    carregar();
+}
+
+function limparMes(){
+    mes.value = "";
+    carregar();
+}
+
+async function carregar(){
+    const m = mes.value || "";
+    const r = await api("/dados?mes=" + encodeURIComponent(m));
+    if(!r.ok){ sair(); return; }
+
+    const d = await r.json();
+
+    saldo.innerText = dinheiro(d.saldo);
+    entradas.innerText = dinheiro(d.entradas);
+    gastos.innerText = dinheiro(d.gastos);
+
+    alertas.innerHTML = "";
+    d.alertas.forEach(a => {
+        alertas.innerHTML += `<div class="notice">${a}</div>`;
+    });
+
+    historico.innerHTML = "";
+    if(d.historico.length === 0){
+        historico.innerHTML = `<p class="muted">Nenhuma transação ainda.</p>`;
+    }
+
+    d.historico.forEach(h => {
+        historico.innerHTML += `
+        <div class="item">
+            <div>
+                <b>${h.descricao}</b>
+                <span>${h.tipo} • ${h.categoria} • ${h.mes}</span>
+                <strong>${dinheiro(h.valor)}</strong>
+            </div>
+            <button class="danger small" onclick="excluir(${h.id})">Excluir</button>
+        </div>`;
+    });
+
+    perguntas.innerHTML = "";
+    Object.entries(d.perguntas).forEach(([id, texto]) => {
+        perguntas.innerHTML += `<button class="question" onclick="perguntar(${id})">${id}. ${texto}</button>`;
+    });
+
+    const labels = Object.keys(d.cats);
+    const valores = Object.values(d.cats);
+
+    if(chart) chart.destroy();
+
+    chart = new Chart(document.getElementById("grafico"), {
+        type: "doughnut",
+        data: { labels: labels, datasets: [{ data: valores }] },
+        options: { plugins: { legend: { labels: { color: "white" } } } }
+    });
+}
+
+async function excluir(id){
+    if(!confirm("Excluir transação?")) return;
+    await api("/delete/" + id, {method:"DELETE"});
+    carregar();
+}
+
+async function perguntar(id){
+    const m = mes.value || "";
+    const r = await api("/ia/" + id + "?mes=" + encodeURIComponent(m));
+    const d = await r.json();
+
+    textoResposta.innerText = d.resposta;
+    modal.style.display = "flex";
+}
+
+function fecharModal(){
+    modal.style.display = "none";
+}
+
+function abrir(id){
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.querySelectorAll(".tabs button").forEach(b => b.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+    document.getElementById("btn" + id).classList.add("active");
+}
+
+if(token && usernameAtual){
+    mostrarApp();
+}
+</script>
+
+</body>
+</html>
