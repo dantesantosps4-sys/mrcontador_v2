@@ -3,6 +3,7 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 import sqlite3, hashlib, secrets
 from datetime import datetime
+import urllib.request, json
 
 app = FastAPI(title="MR Contador")
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -385,4 +386,76 @@ def ia(pergunta_id: int, mes: str = "", authorization: str = Header(default=""))
 
     return {"resposta": resposta_ia(user[0], pergunta_id, mes)}
 
+@app.get("/radar-cripto")
+def radar_cripto():
+    url = (
+        "https://api.coingecko.com/api/v3/coins/markets"
+        "?vs_currency=brl"
+        "&ids=bitcoin,ethereum,solana,cardano,ripple,dogecoin"
+        "&order=market_cap_desc"
+        "&per_page=6"
+        "&page=1"
+        "&sparkline=false"
+        "&price_change_percentage=24h,7d"
+    )
 
+    try:
+        req = urllib.request.Request(
+            url,
+            headers={"User-Agent": "MRContador/1.0"}
+        )
+
+        with urllib.request.urlopen(req, timeout=10) as response:
+            moedas = json.loads(response.read().decode("utf-8"))
+
+        resultado = []
+
+        for m in moedas:
+            nome = m.get("n/ame", "")
+            simbolo = m.get("symbol", "").upper()
+            preco = float(m.get("current_price") or 0)
+            var24 = float(m.get("price_change_percentage_24h") or 0)
+            var7 = float(m.get("price_change_percentage_7d_in_currency") or 0)
+            market_cap = float(m.get("market_cap") or 0)
+
+            if var24 > 5 and var7 > 8:
+                tendencia = "alta forte"
+                risco = "alto"
+                explicacao = f"{nome} subiu bem nas últimas 24h e também nos últimos 7 dias. Isso mostra força recente, mas também aumenta o risco de correção."
+            elif var24 > 2 and var7 > 0:
+                tendencia = "alta moderada"
+                risco = "médio"
+                explicacao = f"{nome} está em alta moderada. O movimento é positivo, mas ainda precisa ser acompanhado com cuidado."
+            elif var24 < -5:
+                tendencia = "queda forte"
+                risco = "alto"
+                explicacao = f"{nome} caiu forte nas últimas 24h. Pode ser oportunidade para alguns perfis, mas o risco está elevado."
+            elif var7 < 0:
+                tendencia = "fraca"
+                risco = "médio/alto"
+                explicacao = f"{nome} está com desempenho negativo na semana. Melhor observar antes de qualquer decisão."
+            else:
+                tendencia = "neutra"
+                risco = "médio"
+                explicacao = f"{nome} está sem movimento muito forte agora. Pode ser melhor acompanhar antes de agir."
+
+            resultado.append({
+                "nome": nome,
+                "simbolo": simbolo,
+                "preco": preco,
+                "var24": var24,
+                "var7": var7,
+                "market_cap": market_cap,
+                "tendencia": tendencia,
+                "risco": risco,
+                "explicacao": explicacao
+            })
+
+        return {"ok": True, "moedas": resultado}
+
+    except Exception as e:
+        return JSONResponse({
+            "ok": False,
+            "erro": "Não consegui buscar os dados de cripto agora.",
+            "detalhe": str(e)
+        }, status_code=500)

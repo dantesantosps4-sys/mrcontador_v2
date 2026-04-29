@@ -13,7 +13,7 @@
 
 <section class="hero">
     <h1>MR Contador</h1>
-    <p>IA financeira com login, filtro mensal, gráfico, avisos e 60 perguntas inteligentes.</p>
+    <p>IA financeira com login, filtro mensal, gráfico, avisos, 60 perguntas e radar de criptos.</p>
 </section>
 
 <section id="loginBox" class="card">
@@ -48,9 +48,10 @@
     </div>
 </section>
 
-<section class="tabs">
+<section class="tabs tabs3">
     <button id="btndash" class="active" onclick="abrir('dash')">Dashboard</button>
     <button id="btnia" onclick="abrir('ia')">IA Financeira</button>
+    <button id="btnradar" onclick="abrir('radar'); carregarRadar()">Radar</button>
 </section>
 
 <div id="dash" class="page active">
@@ -87,6 +88,18 @@
 </section>
 </div>
 
+<div id="radar" class="page">
+<section class="card">
+    <h2>Radar de Criptos</h2>
+    <p class="muted">
+        Acompanhe moedas em tempo real com explicação automática da IA.
+        Não é recomendação de compra.
+    </p>
+    <button onclick="carregarRadar()">Atualizar radar</button>
+    <div id="radarLista"></div>
+</section>
+</div>
+
 </div>
 
 </div>
@@ -110,7 +123,9 @@ function dinheiro(v){
 
 async function api(url, options={}){
     options.headers = options.headers || {};
-    if(token) options.headers["Authorization"] = "Bearer " + token;
+    if(token){
+        options.headers["Authorization"] = "Bearer " + token;
+    }
     return fetch(url, options);
 }
 
@@ -122,7 +137,10 @@ async function register(){
     const r = await fetch("/register", {method:"POST", body:form});
     const d = await r.json();
 
-    if(!d.ok){ alert(d.erro); return; }
+    if(!d.ok){
+        alert(d.erro || "Erro ao criar conta");
+        return;
+    }
 
     token = d.token;
     usernameAtual = d.username;
@@ -139,7 +157,10 @@ async function login(){
     const r = await fetch("/login", {method:"POST", body:form});
     const d = await r.json();
 
-    if(!d.ok){ alert("Login inválido"); return; }
+    if(!d.ok){
+        alert("Login inválido");
+        return;
+    }
 
     token = d.token;
     usernameAtual = d.username;
@@ -168,7 +189,11 @@ async function salvar(){
     form.append("tipo", tipo.value);
 
     const r = await api("/add", {method:"POST", body:form});
-    if(!r.ok){ alert("Erro ao salvar"); return; }
+
+    if(!r.ok){
+        alert("Erro ao salvar");
+        return;
+    }
 
     descricao.value = "";
     valor.value = "";
@@ -183,7 +208,11 @@ function limparMes(){
 async function carregar(){
     const m = mes.value || "";
     const r = await api("/dados?mes=" + encodeURIComponent(m));
-    if(!r.ok){ sair(); return; }
+
+    if(!r.ok){
+        sair();
+        return;
+    }
 
     const d = await r.json();
 
@@ -218,17 +247,29 @@ async function carregar(){
         perguntas.innerHTML += `<button class="question" onclick="perguntar(${id})">${id}. ${texto}</button>`;
     });
 
-    const labels = Object.keys(d.cats);
-    const valores = Object.values(d.cats);
+    const labels = Object.keys(d.cats || {});
+    const valores = Object.values(d.cats || {});
 
-    if(chart) chart.destroy();
+    if(chart){
+        chart.destroy();
+    }
 
     chart = new Chart(document.getElementById("grafico"), {
         type: "doughnut",
-        data: { labels: labels, datasets: [{ data: valores }] },
-        options: { plugins: { legend: { labels: { color: "white" } } } }
+        data: {
+            labels: labels,
+            datasets: [{ data: valores }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    labels: { color: "white" }
+                }
+            }
+        }
     });
 }
+
 async function excluir(id){
     if(!confirm("Excluir transação?")) return;
 
@@ -243,7 +284,6 @@ async function excluir(id){
 
     carregar();
 }
-
 
 async function perguntar(id){
     const m = mes.value || "";
@@ -261,8 +301,69 @@ function fecharModal(){
 function abrir(id){
     document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
     document.querySelectorAll(".tabs button").forEach(b => b.classList.remove("active"));
+
     document.getElementById(id).classList.add("active");
     document.getElementById("btn" + id).classList.add("active");
+}
+
+async function carregarRadar(){
+    radarLista.innerHTML = "<p class='muted'>Carregando criptos...</p>";
+
+    try{
+        const r = await fetch("/radar-cripto");
+        const d = await r.json();
+
+        if(!d.ok){
+            radarLista.innerHTML = "<div class='notice'>Erro ao carregar radar.</div>";
+            return;
+        }
+
+        radarLista.innerHTML = "";
+
+        d.moedas.forEach(m => {
+            const classe24 = m.var24 >= 0 ? "positivo" : "negativo";
+            const classe7 = m.var7 >= 0 ? "positivo" : "negativo";
+
+            radarLista.innerHTML += `
+                <div class="cryptoCard">
+                    <div class="cryptoHeader">
+                        <div>
+                            <h3>${m.nome || "Cripto"} <span>(${m.simbolo})</span></h3>
+                            <strong>${dinheiro(m.preco)}</strong>
+                        </div>
+                        <span class="badge">${m.tendencia}</span>
+                    </div>
+
+                    <div class="cryptoGrid">
+                        <div>
+                            <small>Variação 24h</small>
+                            <b class="${classe24}">${m.var24.toFixed(2)}%</b>
+                        </div>
+                        <div>
+                            <small>Variação 7d</small>
+                            <b class="${classe7}">${m.var7.toFixed(2)}%</b>
+                        </div>
+                        <div>
+                            <small>Risco</small>
+                            <b>${m.risco}</b>
+                        </div>
+                    </div>
+
+                    <div class="aiText">
+                        <b>🤖 Análise da IA:</b><br>
+                        ${m.explicacao}
+                    </div>
+
+                    <p class="muted avisoInvest">
+                        ⚠️ Informação educativa. Não é recomendação de compra ou venda.
+                    </p>
+                </div>
+            `;
+        });
+
+    }catch(e){
+        radarLista.innerHTML = "<div class='notice'>Erro geral ao carregar radar.</div>";
+    }
 }
 
 if(token && usernameAtual){
@@ -272,3 +373,4 @@ if(token && usernameAtual){
 
 </body>
 </html>
+
