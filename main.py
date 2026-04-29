@@ -2,8 +2,13 @@ from fastapi import FastAPI, Form, Header
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 import sqlite3, hashlib, secrets
-from datetime import datetime
 import urllib.request, json
+from fastapi.responses import Response
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from reportlab.lib import colors
+from io import BytesIO
+from datetime import datetime
 
 app = FastAPI(title="MR Contador")
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -459,3 +464,189 @@ def radar_cripto():
             "erro": "Não consegui buscar os dados de cripto agora.",
             "detalhe": str(e)
         }, status_code=500)
+
+@app.get("/pdf")
+def gerar_pdf(mes: str = "", authorization: str = Header(default="")):
+    token = authorization.replace("Bearer ", "")
+    user = usuario_por_token(token)
+
+    if not user:
+        return JSONResponse({"ok": False, "erro": "Não autorizado"}, status_code=401)
+
+    username = user[1]
+    dados_usuario = resumo(user[0], mes)
+    alertas_pdf = gerar_alertas(dados_usuario)
+
+    buffer = BytesIO()
+    pdf = canvas.Canvas(buffer, pagesize=A4)
+    largura, altura = A4
+
+    def money(v):
+        return f"R$ {v:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+
+    def nova_pagina():
+        pdf.showPage()
+        fundo()
+        return altura - 60
+
+    def fundo():
+        pdf.setFillColor(colors.HexColor("#0f172a"))
+        pdf.rect(0, 0, largura, altura, fill=1, stroke=0)
+
+    def card(x, y, w, h, cor="#111827"):
+        pdf.setFillColor(colors.HexColor(cor))
+        pdf.roundRect(x, y, w, h, 14, fill=1, stroke=0)
+
+    def texto(x, y, txt, size=10, cor="#ffffff", bold=False):
+        pdf.setFillColor(colors.HexColor(cor))
+        pdf.setFont("Helvetica-Bold" if bold else "Helvetica", size)
+        pdf.drawString(x, y, str(txt))
+
+    def linha_texto(txt, max_chars=82):
+        linhas = []
+        atual = ""
+        for palavra in str(txt).split():
+            if len(atual + " " + palavra) <= max_chars:
+                atual += (" " if atual else "") + palavra
+            else:
+                linhas.append(atual)
+                atual = palavra
+        if atual:
+            linhas.append(atual)
+        return linhas
+
+    entradas = dados_usuario["entradas"]
+    gastos = dados_usuario["gastos"]
+    saldo = dados_usuario["saldo"]
+    cats = dados_usuario["cats"]
+
+    # Análise da IA do relatório
+    if gastos > entradas and entradas > 0:
+        status = "Alerta"
+        analise = f"Seus gastos passaram das receitas. O déficit atual é de {money(gastos - entradas)}. O foco deve ser reduzir despesas variáveis e evitar novos gastos até o saldo estabilizar."
+    elif entradas > 0 and gastos >= entradas * 0.7:
+        status = "Atenção"
+        analise = f"Você ainda está com saldo positivo, mas os gastos já consomem uma parte alta da receita. Cortar 10% dos gastos geraria economia aproximada de {money(gastos * 0.10)}."
+    elif saldo > 0:
+        status = "Saudável"
+        analise = f"Sua situação está positiva. Você fechou o período com saldo de {money(saldo)}. Uma boa estratégia seria guardar parte desse valor e manter atenção às maiores categorias."
+    else:
+        status = "Inicial"
+        analise = "Ainda existem poucos dados para uma análise mais precisa. Registre mais movimentações para melhorar os alertas e o relatório."
+
+    maior_cat = max(cats, key=cats.get) if cats else "Sem categoria"
+    maior_val = cats.get(maior_cat, 0)
+
+    fundo()
+
+    # Cabeçalho
+    y = altura - 55
+    texto(40, y, "MR Contador", 24, "#ffffff", True)
+    texto(40, y - 22, "Relatório financeiro inteligente", 11, "#cbd5e1")
+    texto(390, y, datetime.now().strftime("%d/%m/%Y %H:%M"), 10, "#cbd5e1")
+    texto(390, y - 18, f"Usuário: {username}", 10, "#cbd5e1")
+
+    # Status
+    y -= 90
+    card(40, y, 515, 80, "#020617")
+    texto(60, y + 52, f"Status financeiro: {status}", 16, "#86efac", True)
+    texto(60, y + 28, f"Período: {mes if mes else 'Todos os registros'}", 10, "#cbd5e1")
+
+    # Cards de resumo
+    y -= 120
+    card(40, y, 160, 80, "#111827")
+    card(218, y, 160, 80, "#111827")
+    card(396, y, 160, 80, "#111827")
+
+    texto(58, y + 52, "Entradas", 10, "#cbd5e1")
+    texto(58, y + 25, money(entradas), 17, "#86efac", True)
+
+    texto(236, y + 52, "Gastos", 10, "#cbd5e1")
+    texto(236, y + 25, money(gastos), 17, "#fca5a5", True)
+
+    texto(414, y + 52, "Saldo", 10, "#cbd5e1")
+    texto(414, y + 25, money(saldo), 17, "#93c5fd", True)
+
+    # Análise IA
+    y -= 145
+    card(40, y, 515, 115, "#111827")
+    texto(60, y + 86, "Análise da IA", 15, "#ffffff", True)
+
+    yy = y + 62
+    pdf.setFont("Helvetica", 10)
+    pdf.setFillColor(colors.HexColor("#dbeafe"))
+    for l in linha_texto(analise, 88):
+        pdf.drawString(60, yy, l)
+        yy -= 15
+
+    # Alertas
+    y -= 115
+    card(40, y, 515, 95, "#1f2937")
+    texto(60, y + 68, "Alertas inteligentes", 14, "#fde68a", True)
+
+    yy = y + 45
+    for a in alertas_pdf[:3]:
+        for l in linha_texto("- " + a, 88):
+            texto(60, yy, l, 9, "#fde68a")
+            yy -= 13
+
+    # Gráfico de barras
+    y -= 210
+    texto(40, y + 170, "Gastos por categoria", 15, "#ffffff", True)
+
+    if cats:
+        max_val = max(cats.values())
+        bar_y = y + 135
+
+        for cat, valor in sorted(cats.items(), key=lambda x: x[1], reverse=True)[:7]:
+            largura_barra = 300 * (valor / max_val) if max_val else 0
+
+            texto(50, bar_y + 4, cat[:18], 9, "#cbd5e1")
+            pdf.setFillColor(colors.HexColor("#1e293b"))
+            pdf.roundRect(160, bar_y, 300, 14, 5, fill=1, stroke=0)
+
+            pdf.setFillColor(colors.HexColor("#60a5fa"))
+            pdf.roundRect(160, bar_y, largura_barra, 14, 5, fill=1, stroke=0)
+
+            texto(470, bar_y + 4, money(valor), 8, "#ffffff")
+            bar_y -= 28
+    else:
+        texto(50, y + 125, "Nenhum gasto registrado no período.", 10, "#cbd5e1")
+
+    # Destaque maior categoria
+    y -= 35
+    card(40, y, 515, 65, "#020617")
+    texto(60, y + 38, "Maior ponto de atenção", 13, "#ffffff", True)
+    texto(60, y + 18, f"{maior_cat} - {money(maior_val)}", 11, "#fca5a5", True)
+
+    # Página de transações
+    y = nova_pagina()
+    texto(40, y, "Transações do período", 18, "#ffffff", True)
+    y -= 35
+
+    if not dados_usuario["historico"]:
+        texto(40, y, "Nenhuma transação registrada.", 11, "#cbd5e1")
+    else:
+        for h in dados_usuario["historico"]:
+            if y < 80:
+                y = nova_pagina()
+                texto(40, y, "Transações do período", 18, "#ffffff", True)
+                y -= 35
+
+            card(40, y - 5, 515, 42, "#111827")
+            texto(55, y + 20, h["descricao"][:38], 10, "#ffffff", True)
+            texto(55, y + 5, f"{h['tipo']} - {h['categoria']} - {h['mes']}", 8, "#cbd5e1")
+
+            cor_valor = "#86efac" if h["tipo"] == "entrada" else "#fca5a5"
+            texto(430, y + 12, money(float(h["valor"])), 10, cor_valor, True)
+            y -= 52
+
+    pdf.save()
+    buffer.seek(0)
+
+    return Response(
+        buffer.getvalue(),
+        media_type="application/pdf",
+        headers={"Content-Disposition": "attachment; filename=relatorio-mrcontador.pdf"}
+    )
+
