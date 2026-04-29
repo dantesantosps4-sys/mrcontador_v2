@@ -229,12 +229,21 @@ async function carregar(){
         options: { plugins: { legend: { labels: { color: "white" } } } }
     });
 }
-
 async function excluir(id){
     if(!confirm("Excluir transação?")) return;
-    await api("/delete/" + id, {method:"DELETE"});
+
+    const r = await api("/delete/" + id, {
+        method: "DELETE"
+    });
+
+    if(!r.ok){
+        alert("Erro ao excluir");
+        return;
+    }
+
     carregar();
 }
+
 
 async function perguntar(id){
     const m = mes.value || "";
