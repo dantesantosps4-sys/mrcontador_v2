@@ -1,4 +1,3 @@
-from openai import OpenAI
 from fastapi import FastAPI, Form, Header, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
@@ -13,7 +12,6 @@ from io import BytesIO
 from datetime import datetime
 app = FastAPI(title="MR Contador")
 
-client = OpenAI()
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
