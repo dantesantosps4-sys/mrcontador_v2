@@ -1,5 +1,7 @@
-from fastapi import FastAPI, Form, Header
+from openai import OpenAI
+from fastapi import FastAPI, Form, Header, Request
 from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 import sqlite3, hashlib, secrets
 import urllib.request, json
@@ -9,8 +11,10 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from io import BytesIO
 from datetime import datetime
-
 app = FastAPI(title="MR Contador")
+
+client = OpenAI()
+templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 DB = "database.db"
@@ -649,4 +653,116 @@ def gerar_pdf(mes: str = "", authorization: str = Header(default="")):
         media_type="application/pdf",
         headers={"Content-Disposition": "attachment; filename=relatorio-mrcontador.pdf"}
     )
+
+@app.get("/acoes", response_class=HTMLResponse)
+async def acoes(request: Request):
+
+    return templates.TemplateResponse(
+        "acoes.html",
+        {"request": request}
+    )
+
+
+@app.get("/fiis", response_class=HTMLResponse)
+async def fiis(request: Request):
+
+    return templates.TemplateResponse(
+        "fiis.html",
+        {"request": request}
+    )
+
+
+@app.get("/ia", response_class=HTMLResponse)
+async def ia(request: Request):
+
+    return templates.TemplateResponse(
+        "ia.html",
+        {"request": request}
+    )
+
+@app.get("/fiis", response_class=HTMLResponse)
+async def fiis(request: Request):
+    return templates.TemplateResponse(
+        "fiis.html",
+        {"request": request}
+    )
+
+@app.get("/ia", response_class=HTMLResponse)
+async def ia(request: Request):
+    return templates.TemplateResponse(
+        "ia.html",
+        {"request": request}
+    )
+
+@app.post("/perguntar-ia")
+async def perguntar_ia(data: dict):
+
+    pergunta = data.get("pergunta")
+
+    resposta = client.chat.completions.create(
+        model="gpt-4.1-mini",
+
+        messages=[
+
+            {
+                "role":"system",
+                "content":"Você é um analista financeiro profissional especialista em ações, FIIs e criptomoedas. Responda curto, moderno e inteligente."
+            },
+
+            {
+                "role":"user",
+                "content":pergunta
+            }
+
+        ]
+
+    )
+
+    return {
+        "resposta":
+        resposta.choices[0].message.content
+    }
+
+@app.post("/perguntar_ia")
+async def perguntar_ia(req: Request):
+
+    data = await req.json()
+    pergunta = data.get("pergunta")
+
+    try:
+        resposta = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {
+                    "role": "system",
+                    "content": """
+Você é uma IA financeira premium especializada em:
+- ações
+- FIIs
+- criptomoedas
+- dividendos
+- risco
+- carteira
+
+Responda curto, inteligente e profissional.
+"""
+                },
+                {
+                    "role": "user",
+                    "content": pergunta
+                }
+            ],
+            max_tokens=250
+        )
+
+        texto = resposta.choices[0].message.content
+
+        return JSONResponse({
+            "resposta": texto
+        })
+
+    except Exception as e:
+        return JSONResponse({
+            "resposta": f"Erro IA: {str(e)}"
+        })
 

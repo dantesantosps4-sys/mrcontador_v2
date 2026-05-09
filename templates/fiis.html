@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>FIIs</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+background:#020b1d;
+color:white;
+padding:20px;
+padding-bottom:120px;
+}
+
+.topo{
+margin-bottom:25px;
+}
+
+.topo h1{
+font-size:52px;
+font-weight:900;
+}
+
+.topo p{
+color:#8b97b5;
+font-size:18px;
+margin-top:8px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:14px;
+}
+
+.card{
+background:linear-gradient(180deg,#081633,#061126);
+border:1px solid rgba(255,255,255,.06);
+border-radius:26px;
+padding:18px;
+box-shadow:
+0 0 25px rgba(0,0,0,.35),
+0 0 10px rgba(59,130,246,.08);
+position:relative;
+overflow:hidden;
+}
+
+.card::before{
+content:"";
+position:absolute;
+width:140px;
+height:140px;
+background:rgba(34,197,94,.08);
+border-radius:50%;
+top:-60px;
+right:-60px;
+}
+
+.nome{
+font-size:18px;
+font-weight:800;
+margin-bottom:12px;
+position:relative;
+z-index:2;
+}
+
+.preco{
+font-size:30px;
+font-weight:900;
+color:#65f0a7;
+margin-bottom:8px;
+position:relative;
+z-index:2;
+}
+
+.rendimento{
+font-size:15px;
+font-weight:700;
+margin-bottom:16px;
+color:#d6d6d6;
+position:relative;
+z-index:2;
+}
+
+.mini{
+display:flex;
+justify-content:space-between;
+font-size:11px;
+color:#9aa8c7;
+margin-bottom:10px;
+position:relative;
+z-index:2;
+}
+
+canvas{
+width:100%;
+height:40px;
+background:#071122;
+border-radius:12px;
+position:relative;
+z-index:2;
+}
+
+.nav{
+position:fixed;
+bottom:0;
+left:0;
+width:100%;
+background:#041027;
+display:flex;
+justify-content:space-around;
+padding:18px 0;
+border-top:1px solid rgba(255,255,255,.05);
+backdrop-filter:blur(10px);
+}
+
+.nav a{
+color:white;
+text-decoration:none;
+font-size:15px;
+font-weight:700;
+opacity:.9;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="topo">
+<h1>FIIs</h1>
+<p>Fundos imobiliários e dividendos</p>
+</div>
+
+<div class="grid">
+
+<div class="card">
+
+<div class="nome">
+MXRF11
+</div>
+
+<div class="preco">
+R$ 10.42
+</div>
+
+<div class="rendimento">
+Dividend Yield 12.1%
+</div>
+
+<div class="mini">
+<span>Risco: Baixo</span>
+<span>IA: Forte</span>
+</div>
+
+<canvas class="grafico"></canvas>
+
+</div>
+
+<div class="card">
+
+<div class="nome">
+HGLG11
+</div>
+
+<div class="preco">
+R$ 164.30
+</div>
+
+<div class="rendimento">
+Dividend Yield 8.4%
+</div>
+
+<div class="mini">
+<span>Risco: Médio</span>
+<span>IA: Estável</span>
+</div>
+
+<canvas class="grafico"></canvas>
+
+</div>
+
+<div class="card">
+
+<div class="nome">
+XPLG11
+</div>
+
+<div class="preco">
+R$ 101.50
+</div>
+
+<div class="rendimento">
+Dividend Yield 9.2%
+</div>
+
+<div class="mini">
+<span>Risco: Médio</span>
+<span>IA: Compra</span>
+</div>
+
+<canvas class="grafico"></canvas>
+
+</div>
+
+</div>
+
+<div class="nav">
+<a href="/">Dashboard</a>
+<a href="/acoes">Ações</a>
+<a href="/fiis">FIIs</a>
+<a href="/ia">IA</a>
+</div>
+
+<script>
+
+const graficos =
+document.querySelectorAll(".grafico");
+
+graficos.forEach(grafico=>{
+
+const ctx =
+grafico.getContext("2d");
+
+ctx.strokeStyle="#22c55e";
+
+ctx.lineWidth=3;
+
+ctx.beginPath();
+
+ctx.moveTo(0,30);
+ctx.lineTo(20,22);
+ctx.lineTo(40,25);
+ctx.lineTo(60,12);
+ctx.lineTo(80,18);
+ctx.lineTo(100,5);
+
+ctx.stroke();
+
+});
+
+</script>
+
+</body>
+</html>
+
