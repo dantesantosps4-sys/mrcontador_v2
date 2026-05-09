@@ -15,7 +15,7 @@ app = FastAPI(title="MR Contador")
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-DB = "database.db"
+DB = "/tmp/database.db"
 
 def conn():
     return sqlite3.connect(DB, check_same_thread=False)
@@ -49,8 +49,7 @@ def init_db():
 
     c.commit()
     c.close()
-
-init_db()
+ # init_db()
 
 PERGUNTAS = {
 1:"Quanto eu gastei esse mês?",2:"Qual foi minha receita total?",3:"Estou no lucro ou prejuízo?",4:"Qual meu saldo atual?",5:"Quanto eu posso gastar hoje?",
