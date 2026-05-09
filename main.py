@@ -764,3 +764,12 @@ Responda curto, inteligente e profissional.
             "resposta": f"Erro IA: {str(e)}"
         })
 
+@app.get("/dashboard",
+response_class=HTMLResponse)
+
+async def dashboard(request: Request):
+
+    return templates.TemplateResponse(
+        "index.html",
+        {"request": request}
+    )
