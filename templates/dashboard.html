@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>MR Contador</title>
+
+<link rel="stylesheet" href="/static/style.css">
+
+</head>
+<body>
+
+<div class="topo">
+
+<div>
+<h1>MR Contador</h1>
+<p class="sub">Controle financeiro premium</p>
+</div>
+
+<button class="sair" onclick="logout()">
+Sair
+</button>
+
+</div>
+
+<div class="saldo-card">
+
+<p>Patrimônio Total</p>
+
+<h2 id="saldoTotal">
+R$ 0,00
+</h2>
+
+<div class="grafico">
+<div class="linha"></div>
+</div>
+
+</div>
+
+<div class="acoes-rapidas">
+
+<button onclick="abrirModal()">
++ Nova Transação
+</button>
+
+<select id="filtroMes" onchange="filtrarMes()">
+<option value="todos">Todos os meses</option>
+<option value="2026-01">2026-01</option>
+<option value="2026-02">2026-02</option>
+<option value="2026-03">2026-03</option>
+<option value="2026-04">2026-04</option>
+</select>
+
+<button onclick="gerarPDF()">
+Exportar PDF
+</button>
+
+</div>
+
+<div class="grid-resumo">
+
+<div class="mini-card entrada">
+<h3>Entradas</h3>
+<p id="totalEntradas">R$ 0,00</p>
+</div>
+
+<div class="mini-card gasto">
+<h3>Gastos</h3>
+<p id="totalGastos">R$ 0,00</p>
+</div>
+
+</div>
+
+<h2 class="titulo">
+Radar Cripto
+</h2>
+
+<div class="cripto-grid">
+
+<div class="cripto-card">
+<h3>Bitcoin</h3>
+<p>Alta volatilidade</p>
+<span class="alta">+2.5%</span>
+</div>
+
+<div class="cripto-card">
+<h3>Ethereum</h3>
+<p>Mercado aquecido</p>
+<span class="alta">+1.2%</span>
+</div>
+
+</div>
+
+<h2 class="titulo">
+Transações
+</h2>
+
+<div id="lista"></div>
+
+<div class="nav">
+
+<a href="/dashboard">Home</a>
+<a href="/acoes">Ações</a>
+<a href="/fiis">FIIs</a>
+<a href="/ia">IA</a>
+
+</div>
+
+<div class="modal" id="modal">
+
+<div class="modal-box">
+
+<h2>Nova Transação</h2>
+
+<input id="nome" placeholder="Nome">
+
+<input id="valor" placeholder="Valor">
+
+<select id="tipo">
+<option value="entrada">Entrada</option>
+<option value="gasto">Gasto</option>
+</select>
+
+<input id="mes" type="month">
+
+<button onclick="salvarTransacao()">
+Salvar
+</button>
+
+<button onclick="fecharModal()">
+Cancelar
+</button>
+
+</div>
+
+</div>
+
+<script src="/static/dashboard.js"></script>
+
+</body>
+</html>
