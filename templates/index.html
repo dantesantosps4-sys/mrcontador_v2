@@ -6,6 +6,8 @@
 <title>MR Contador</title>
 <link rel="stylesheet" href="/static/style.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="manifest" href="/static/manifest.json">
+<meta name="theme-color" content="#00E5FF">
 </head>
 <body>
 
@@ -349,6 +351,10 @@ if(token && usernameAtual){
     mostrarApp();
 }
 </script>
-
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/static/sw.js");
+}
+</script>
 </body>
 </html>
