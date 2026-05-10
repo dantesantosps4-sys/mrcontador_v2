@@ -1,744 +1,193 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
-
-<title>IA Financeira</title>
-
-<style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial;
-}
-
-body{
-
-background:
-linear-gradient(to bottom,#02153a,#000814);
-
-color:white;
-
-padding:18px;
-
-padding-bottom:130px;
-
-}
-
-/* TOPO */
-
-.topbar{
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-margin-bottom:22px;
-
-}
-
-.logo{
-
-font-size:38px;
-
-font-weight:900;
-
-}
-
-.btn-dashboard{
-
-background:
-linear-gradient(45deg,#2563eb,#4f8cff);
-
-padding:12px 18px;
-
-border-radius:16px;
-
-font-size:14px;
-
-font-weight:bold;
-
-text-decoration:none;
-
-color:white;
-
-box-shadow:
-0 10px 18px rgba(37,99,235,.35);
-
-}
-
-.sub{
-
-font-size:15px;
-
-color:#9fb0d8;
-
-line-height:1.6;
-
-margin-bottom:26px;
-
-}
-
-/* CARDS */
-
-.cards{
-
-display:flex;
-
-gap:14px;
-
-overflow:auto;
-
-padding-bottom:8px;
-
-margin-bottom:24px;
-
-}
-
-.card{
-
-min-width:190px;
-
-background:
-linear-gradient(180deg,#081b4d,#061126);
-
-padding:18px;
-
-border-radius:24px;
-
-border:
-1px solid rgba(255,255,255,.05);
-
-box-shadow:
-0 10px 20px rgba(0,0,0,.25);
-
-}
-
-.card h3{
-
-font-size:20px;
-
-margin-bottom:10px;
-
-}
-
-.card p{
-
-font-size:14px;
-
-line-height:1.5;
-
-color:#d6def5;
-
-}
-
-.tag{
-
-display:inline-block;
-
-margin-top:14px;
-
-background:#123d88;
-
-padding:7px 14px;
-
-border-radius:999px;
-
-font-size:12px;
-
-font-weight:bold;
-
-}
-
-/* SUGESTÕES */
-
-.sugestoes{
-
-display:flex;
-
-gap:10px;
-
-overflow:auto;
-
-padding-bottom:6px;
-
-margin-bottom:24px;
-
-}
-
-.sugestao{
-
-background:#081b4d;
-
-padding:12px 16px;
-
-border-radius:16px;
-
-white-space:nowrap;
-
-font-size:14px;
-
-border:
-1px solid rgba(255,255,255,.05);
-
-box-shadow:
-0 8px 16px rgba(0,0,0,.2);
-
-}
-
-/* CHAT */
-
-.chat{
-
-display:flex;
-
-flex-direction:column;
-
-gap:16px;
-
-}
-
-.msg-user{
-
-align-self:flex-end;
-
-background:
-linear-gradient(45deg,#2563eb,#4f8cff);
-
-padding:18px;
-
-border-radius:22px;
-
-font-size:15px;
-
-max-width:86%;
-
-box-shadow:
-0 10px 20px rgba(37,99,235,.3);
-
-}
-
-.msg-ia{
-
-align-self:flex-start;
-
-background:
-linear-gradient(180deg,#081b4d,#07163b);
-
-padding:20px;
-
-border-radius:24px;
-
-max-width:92%;
-
-font-size:15px;
-
-line-height:1.7;
-
-border:
-1px solid rgba(255,255,255,.05);
-
-box-shadow:
-0 10px 20px rgba(0,0,0,.22);
-
-}
-
-.msg-ia strong{
-
-color:#6fffb2;
-
-font-size:14px;
-
-}
-
-/* INPUT */
-
-.area{
-
-position:fixed;
-
-bottom:0;
-
-left:0;
-
-right:0;
-
-padding:14px;
-
-display:flex;
-
-gap:10px;
-
-background:
-rgba(2,11,29,.98);
-
-backdrop-filter:blur(16px);
-
-border-top:
-1px solid rgba(255,255,255,.05);
-
-}
-
-input{
-
-flex:1;
-
-background:#081b4d;
-
-border:none;
-
-outline:none;
-
-color:white;
-
-padding:16px;
-
-border-radius:18px;
-
-font-size:15px;
-
-}
-
-button{
-
-background:
-linear-gradient(45deg,#2563eb,#4f8cff);
-
-border:none;
-
-color:white;
-
-padding:16px 22px;
-
-border-radius:18px;
-
-font-size:15px;
-
-font-weight:bold;
-
-box-shadow:
-0 10px 18px rgba(37,99,235,.35);
-
-}
-
-button:active{
-transform:scale(.97);
-}
-
-</style>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IA Financeira</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #020617, #0f172a);
+      color: white;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .titulo {
+      font-size: 36px;
+      margin-bottom: 25px;
+      font-weight: bold;
+    }
+
+    .box {
+      background: #111827;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    }
+
+    textarea {
+      width: 100%;
+      height: 140px;
+      border: none;
+      outline: none;
+      border-radius: 15px;
+      padding: 15px;
+      background: #1e293b;
+      color: white;
+      resize: none;
+      font-size: 16px;
+    }
+
+    button {
+      margin-top: 15px;
+      background: #2563eb;
+      border: none;
+      color: white;
+      padding: 14px 20px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    .resposta {
+      margin-top: 20px;
+      background: #1e293b;
+      padding: 20px;
+      border-radius: 15px;
+      min-height: 100px;
+      white-space: pre-wrap;
+    }
+
+    .perguntas {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-top: 25px;
+    }
+
+    .pergunta {
+      background: #1e293b;
+      padding: 15px;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .pergunta:hover {
+      transform: scale(1.03);
+      background: #334155;
+    }
+
+  </style>
 </head>
-
 <body>
 
-<!-- TOPO -->
+  <div class="container">
 
-<div class="topbar">
+    <div class="titulo">🤖 IA Financeira Premium</div>
 
-<div class="logo">
-IA Financeira
-</div>
+    <div class="box">
 
-<a href="/"
-class="btn-dashboard">
+      <textarea id="pergunta" placeholder="Pergunte sobre ações, FIIs, dividendos, criptomoedas, risco, valuation..."></textarea>
 
-Dashboard
+      <button onclick="perguntarIA()">Perguntar IA</button>
 
-</a>
+      <div class="resposta" id="resposta">
+        Sua resposta aparecerá aqui.
+      </div>
 
-</div>
+    </div>
 
-<div class="sub">
+    <div class="perguntas">
 
-Análises inteligentes sobre
-ações, FIIs, criptomoedas,
-dividendos e investimentos.
+      <div class="pergunta" onclick="usarPergunta(this)">
+        Vale a pena investir em PETR4 hoje?
+      </div>
 
-</div>
+      <div class="pergunta" onclick="usarPergunta(this)">
+        Quais os melhores FIIs para dividendos?
+      </div>
 
-<!-- CARDS -->
+      <div class="pergunta" onclick="usarPergunta(this)">
+        Bitcoin ainda tem potencial de alta?
+      </div>
 
-<div class="cards">
+      <div class="pergunta" onclick="usarPergunta(this)">
+        Como montar carteira para longo prazo?
+      </div>
 
-<div class="card">
+      <div class="pergunta" onclick="usarPergunta(this)">
+        Qual ação mais segura da bolsa brasileira?
+      </div>
 
-<h3>PETR4</h3>
+      <div class="pergunta" onclick="usarPergunta(this)">
+        Como viver de dividendos?
+      </div>
 
-<p>
+    </div>
 
-Fluxo comprador forte
-e dividendos elevados.
+  </div>
 
-</p>
+  <script>
 
-<div class="tag">
-Compra
-</div>
+    function usarPergunta(el) {
+      document.getElementById('pergunta').value = el.innerText;
+    }
 
-</div>
+    async function perguntarIA() {
 
-<div class="card">
+      const pergunta = document.getElementById('pergunta').value;
 
-<h3>Bitcoin</h3>
+      const respostaDiv = document.getElementById('resposta');
 
-<p>
+      respostaDiv.innerHTML = 'Pensando...';
 
-Mercado volátil com
-chance de recuperação.
+      try {
 
-</p>
+        const resposta = await fetch('/perguntar_ia', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            pergunta: pergunta
+          })
+        });
 
-<div class="tag">
-Atenção
-</div>
+        const dados = await resposta.json();
 
-</div>
+        respostaDiv.innerHTML = dados.resposta;
 
-<div class="card">
+      } catch (erro) {
+        respostaDiv.innerHTML = 'Erro ao consultar IA.';
+      }
 
-<h3>MXRF11</h3>
+    }
 
-<p>
-
-Boa renda passiva
-e dividendos estáveis.
-
-</p>
-
-<div class="tag">
-Dividendos
-</div>
-
-</div>
-
-</div>
-
-<!-- PERGUNTAS -->
-
-<div class="sugestoes">
-
-<div class="sugestao"
-onclick="perguntaRapida('Vale comprar PETR4 hoje?')">
-
-📈 PETR4 hoje
-
-</div>
-
-<div class="sugestao"
-onclick="perguntaRapida('Bitcoin pode subir essa semana?')">
-
-₿ Bitcoin
-
-</div>
-
-<div class="sugestao"
-onclick="perguntaRapida('Melhores FIIs para dividendos')">
-
-🏢 FIIs
-
-</div>
-
-<div class="sugestao"
-onclick="perguntaRapida('Como investir 1000 reais?')">
-
-💰 Investir
-
-</div>
-
-<div class="sugestao"
-onclick="perguntaRapida('Qual melhor carteira para iniciantes?')">
-
-📊 Carteira
-
-</div>
-
-<div class="sugestao"
-onclick="perguntaRapida('Ações para dividendos')">
-
-💵 Dividendos
-
-</div>
-
-<div class="sugestao"
-onclick="perguntaRapida('Vale investir em criptomoedas?')">
-
-🚀 Criptos
-
-</div>
-
-</div>
-
-<!-- CHAT -->
-
-<div class="chat" id="chat">
-
-<div class="msg-ia">
-
-<strong>
-IA Financeira
-</strong>
-
-<br><br>
-
-Olá 👋
-
-Posso analisar:
-
-• ações  
-• FIIs  
-• criptomoedas  
-• dividendos  
-• carteira  
-• riscos  
-
-</div>
-
-</div>
-
-<!-- INPUT -->
-
-<div class="area">
-
-<input
-id="pergunta"
-placeholder="Pergunte algo...">
-
-<button onclick="enviarPergunta()">
-
-Enviar
-
-</button>
-
-</div>
-
-<script>
-
-function perguntaRapida(texto){
-
-document
-.getElementById("pergunta")
-.value = texto;
-
-enviarPergunta();
-
-}
-
-function enviarPergunta(){
-
-const input =
-document.getElementById("pergunta");
-
-const chat =
-document.getElementById("chat");
-
-const pergunta = input.value;
-
-if(!pergunta){
-return;
-}
-
-chat.innerHTML += `
-
-<div class="msg-user">
-${pergunta}
-</div>
-
-`;
-
-input.value = "";
-
-let resposta = "";
-
-const p = pergunta.toLowerCase();
-
-/* PETR4 */
-
-if(
-p.includes("petr4")
-){
-
-resposta = `
-📈 PETR4 segue forte
-no curto prazo.
-
-✅ Dividendos elevados
-
-✅ Fluxo comprador positivo
-
-⚠️ Petróleo pode impactar
-a volatilidade.
-`;
-
-}
-
-/* BITCOIN */
-
-else if(
-p.includes("bitcoin")
-|| p.includes("btc")
-){
-
-resposta = `
-₿ Bitcoin continua
-em tendência positiva.
-
-✅ Forte interesse institucional
-
-✅ Alta volatilidade
-
-💡 Ideal para longo prazo.
-`;
-
-}
-
-/* FIIS */
-
-else if(
-p.includes("fii")
-|| p.includes("fiis")
-){
-
-resposta = `
-🏢 FIIs interessantes:
-
-• MXRF11
-• CPTS11
-• XPLG11
-
-✅ Dividendos mensais
-✅ Boa renda passiva
-`;
-
-}
-
-/* INVESTIR */
-
-else if(
-p.includes("1000")
-|| p.includes("mil")
-){
-
-resposta = `
-💰 Estratégia para R$1000:
-
-• 40% ações
-• 40% FIIs
-• 20% caixa
-
-✅ Carteira equilibrada.
-`;
-
-}
-
-/* CARTEIRA */
-
-else if(
-p.includes("carteira")
-){
-
-resposta = `
-📊 Carteira sugerida:
-
-• PETR4
-• ITUB4
-• MXRF11
-• Bitcoin
-
-✅ Boa diversificação.
-`;
-
-}
-
-/* DIVIDENDOS */
-
-else if(
-p.includes("dividendos")
-){
-
-resposta = `
-💵 Ações para dividendos:
-
-• PETR4
-• BBAS3
-• TAEE11
-
-✅ Boas pagadoras
-no longo prazo.
-`;
-
-}
-
-/* CRIPTOS */
-
-else if(
-p.includes("cripto")
-){
-
-resposta = `
-🚀 Criptomoedas promissoras:
-
-• Bitcoin
-• Ethereum
-• Solana
-
-⚠️ Mercado muito volátil.
-`;
-
-}
-
-/* DEFAULT */
-
-else{
-
-resposta = `
-🤖 Posso responder sobre:
-
-• PETR4
-• Bitcoin
-• FIIs
-• Dividendos
-• Carteira
-• Investimentos
-
-Tente uma das sugestões 🔥
-`;
-
-}
-
-chat.innerHTML += `
-
-<div class="msg-ia">
-
-<strong>
-IA Financeira
-</strong>
-
-<br><br>
-
-${resposta}
-
-</div>
-
-`;
-
-window.scrollTo(
-0,
-document.body.scrollHeight
-);
-
-}
-
-</script>
+  </script>
 
 </body>
 </html>
+
+
+
 

@@ -1,240 +1,182 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ações Premium</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
 
-<title>Ações</title>
+    body {
+      background: #0f172a;
+      color: white;
+      padding: 20px;
+    }
 
-<style>
+    .topo {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial;
-}
+    .titulo {
+      font-size: 32px;
+      font-weight: bold;
+    }
 
-body{
-background:#020b1d;
-color:white;
-padding:20px;
-padding-bottom:120px;
-}
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      margin-bottom: 25px;
+    }
 
-.topo{
-margin-bottom:25px;
-}
+    .card {
+      background: #1e293b;
+      border-radius: 20px;
+      padding: 20px;
+      transition: 0.3s;
+      box-shadow: 0 0 20px rgba(0,0,0,0.25);
+    }
 
-.topo h1{
-font-size:52px;
-font-weight:900;
-}
+    .card:hover {
+      transform: translateY(-5px);
+    }
 
-.topo p{
-color:#8b97b5;
-font-size:18px;
-margin-top:8px;
-}
+    .nome {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
 
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:14px;
-}
+    .valor {
+      font-size: 30px;
+      font-weight: bold;
+    }
 
-.card{
-background:linear-gradient(180deg,#081633,#061126);
-border:1px solid rgba(255,255,255,0.06);
-border-radius:26px;
-padding:18px;
-box-shadow:
-0 0 25px rgba(0,0,0,.35),
-0 0 10px rgba(59,130,246,.08);
-position:relative;
-overflow:hidden;
-}
+    .alta {
+      color: #4ade80;
+    }
 
-.card::before{
-content:"";
-position:absolute;
-width:140px;
-height:140px;
-background:rgba(59,130,246,.08);
-border-radius:50%;
-top:-60px;
-right:-60px;
-}
+    .baixa {
+      color: #f87171;
+    }
 
-.nome{
-font-size:18px;
-font-weight:800;
-margin-bottom:12px;
-position:relative;
-z-index:2;
-}
+    .grafico {
+      background: #1e293b;
+      padding: 20px;
+      border-radius: 20px;
+      margin-bottom: 25px;
+    }
 
-.preco{
-font-size:32px;
-font-weight:900;
-color:#65f0a7;
-margin-bottom:8px;
-position:relative;
-z-index:2;
-}
+    .lista {
+      background: #1e293b;
+      border-radius: 20px;
+      padding: 20px;
+    }
 
-.variacao{
-font-size:15px;
-font-weight:700;
-margin-bottom:16px;
-color:#d6d6d6;
-position:relative;
-z-index:2;
-}
+    .item {
+      padding: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
 
-.mini{
-display:flex;
-justify-content:space-between;
-font-size:11px;
-color:#9aa8c7;
-margin-bottom:10px;
-position:relative;
-z-index:2;
-}
+    .item:last-child {
+      border-bottom: none;
+    }
 
-canvas{
-width:100%;
-height:40px;
-background:#071122;
-border-radius:12px;
-position:relative;
-z-index:2;
-}
+    .btn {
+      background: #2563eb;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 12px;
+      color: white;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: 0.3s;
+    }
 
-.nav{
-position:fixed;
-bottom:0;
-left:0;
-width:100%;
-background:#041027;
-display:flex;
-justify-content:space-around;
-padding:18px 0;
-border-top:1px solid rgba(255,255,255,.05);
-backdrop-filter:blur(10px);
-}
+    .btn:hover {
+      background: #1d4ed8;
+    }
 
-.nav a{
-color:white;
-text-decoration:none;
-font-size:15px;
-font-weight:700;
-opacity:.9;
-}
-
-</style>
+  </style>
 </head>
-
 <body>
 
-<div class="topo">
-<h1>Ações</h1>
-<p>Mercado brasileiro em tempo real</p>
-</div>
+  <div class="topo">
+    <div class="titulo">📈 Painel de Ações</div>
+    <button class="btn" onclick="location.href='/'">Voltar</button>
+  </div>
 
-<div class="grid" id="acoes"></div>
+  <div class="grid">
+    <div class="card">
+      <div class="nome">PETR4</div>
+      <div class="valor alta">R$ 39,21</div>
+      <p>+2.41%</p>
+    </div>
 
-<div class="nav">
-<a href="/">Dashboard</a>
-<a href="/acoes">Ações</a>
-<a href="/fiis">FIIs</a>
-<a href="/ia">IA</a>
-</div>
+    <div class="card">
+      <div class="nome">VALE3</div>
+      <div class="valor baixa">R$ 61,80</div>
+      <p>-1.09%</p>
+    </div>
 
-<script>
+    <div class="card">
+      <div class="nome">ITUB4</div>
+      <div class="valor alta">R$ 34,72</div>
+      <p>+0.88%</p>
+    </div>
 
-async function carregar(){
+    <div class="card">
+      <div class="nome">BBAS3</div>
+      <div class="valor alta">R$ 28,15</div>
+      <p>+3.02%</p>
+    </div>
+  </div>
 
-try{
+  <div class="grafico">
+    <h2>Desempenho da Carteira</h2>
+    <canvas id="grafico"></canvas>
+  </div>
 
-const res = await fetch(
-"https://brapi.dev/api/quote/PETR4,VALE3,ITUB4"
-);
+  <div class="lista">
+    <h2>Insights</h2>
 
-const data = await res.json();
+    <div class="item">• PETR4 segue forte com alta do petróleo.</div>
+    <div class="item">• VALE3 pressionada pelo minério na China.</div>
+    <div class="item">• Bancos continuam entregando dividendos fortes.</div>
+    <div class="item">• Small caps começam a ganhar volume.</div>
+    <div class="item">• Mercado atento à taxa Selic.</div>
+  </div>
 
-const html = data.results.map(a => `
+  <script>
+    const ctx = document.getElementById('grafico');
 
-<div class="card">
-
-<div class="nome">
-${a.symbol}
-</div>
-
-<div class="preco">
-R$ ${a.regularMarketPrice}
-</div>
-
-<div class="variacao">
-${a.regularMarketChangePercent.toFixed(2)}%
-</div>
-
-<div class="mini">
-<span>Volume: Alto</span>
-<span>IA: Compra</span>
-</div>
-
-<canvas class="grafico"></canvas>
-
-</div>
-
-`).join("");
-
-document.getElementById("acoes").innerHTML = html;
-
-desenhar();
-
-}catch{
-
-document.getElementById("acoes").innerHTML = `
-<div class="card">
-Erro ao carregar mercado.
-</div>
-`;
-
-}
-
-}
-
-function desenhar(){
-
-const graficos = document.querySelectorAll(".grafico");
-
-graficos.forEach(grafico=>{
-
-const ctx = grafico.getContext("2d");
-
-ctx.strokeStyle="#3b82f6";
-ctx.lineWidth=3;
-
-ctx.beginPath();
-
-ctx.moveTo(0,30);
-ctx.lineTo(20,22);
-ctx.lineTo(40,25);
-ctx.lineTo(60,10);
-ctx.lineTo(80,18);
-ctx.lineTo(100,5);
-
-ctx.stroke();
-
-});
-
-}
-
-carregar();
-
-</script>
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+        datasets: [{
+          label: 'Carteira',
+          data: [12000, 13500, 12800, 14900, 15800, 17200],
+          borderWidth: 3,
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true
+      }
+    });
+  </script>
 
 </body>
 </html>
+

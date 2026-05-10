@@ -1,255 +1,149 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FIIs Premium</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<title>FIIs</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
 
-<style>
+    body {
+      background: #020617;
+      color: white;
+      padding: 20px;
+    }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial;
-}
+    .titulo {
+      font-size: 32px;
+      margin-bottom: 25px;
+      font-weight: bold;
+    }
 
-body{
-background:#020b1d;
-color:white;
-padding:20px;
-padding-bottom:120px;
-}
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 25px;
+    }
 
-.topo{
-margin-bottom:25px;
-}
+    .card {
+      background: #111827;
+      padding: 20px;
+      border-radius: 20px;
+      transition: 0.3s;
+    }
 
-.topo h1{
-font-size:52px;
-font-weight:900;
-}
+    .card:hover {
+      transform: scale(1.03);
+    }
 
-.topo p{
-color:#8b97b5;
-font-size:18px;
-margin-top:8px;
-}
+    .fii {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
 
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:14px;
-}
+    .dy {
+      color: #4ade80;
+      font-size: 26px;
+      font-weight: bold;
+    }
 
-.card{
-background:linear-gradient(180deg,#081633,#061126);
-border:1px solid rgba(255,255,255,.06);
-border-radius:26px;
-padding:18px;
-box-shadow:
-0 0 25px rgba(0,0,0,.35),
-0 0 10px rgba(59,130,246,.08);
-position:relative;
-overflow:hidden;
-}
+    .grafico {
+      background: #111827;
+      padding: 20px;
+      border-radius: 20px;
+      margin-bottom: 25px;
+    }
 
-.card::before{
-content:"";
-position:absolute;
-width:140px;
-height:140px;
-background:rgba(34,197,94,.08);
-border-radius:50%;
-top:-60px;
-right:-60px;
-}
+    .noticias {
+      background: #111827;
+      border-radius: 20px;
+      padding: 20px;
+    }
 
-.nome{
-font-size:18px;
-font-weight:800;
-margin-bottom:12px;
-position:relative;
-z-index:2;
-}
+    .noticia {
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
 
-.preco{
-font-size:30px;
-font-weight:900;
-color:#65f0a7;
-margin-bottom:8px;
-position:relative;
-z-index:2;
-}
+    .noticia:last-child {
+      border-bottom: none;
+    }
 
-.rendimento{
-font-size:15px;
-font-weight:700;
-margin-bottom:16px;
-color:#d6d6d6;
-position:relative;
-z-index:2;
-}
-
-.mini{
-display:flex;
-justify-content:space-between;
-font-size:11px;
-color:#9aa8c7;
-margin-bottom:10px;
-position:relative;
-z-index:2;
-}
-
-canvas{
-width:100%;
-height:40px;
-background:#071122;
-border-radius:12px;
-position:relative;
-z-index:2;
-}
-
-.nav{
-position:fixed;
-bottom:0;
-left:0;
-width:100%;
-background:#041027;
-display:flex;
-justify-content:space-around;
-padding:18px 0;
-border-top:1px solid rgba(255,255,255,.05);
-backdrop-filter:blur(10px);
-}
-
-.nav a{
-color:white;
-text-decoration:none;
-font-size:15px;
-font-weight:700;
-opacity:.9;
-}
-
-</style>
+  </style>
 </head>
-
 <body>
 
-<div class="topo">
-<h1>FIIs</h1>
-<p>Fundos imobiliários e dividendos</p>
-</div>
+  <div class="titulo">🏢 Fundos Imobiliários</div>
 
-<div class="grid">
+  <div class="grid">
 
-<div class="card">
+    <div class="card">
+      <div class="fii">MXRF11</div>
+      <div class="dy">12.3% DY</div>
+      <p>Fundo híbrido com renda mensal.</p>
+    </div>
 
-<div class="nome">
-MXRF11
-</div>
+    <div class="card">
+      <div class="fii">HGLG11</div>
+      <div class="dy">9.1% DY</div>
+      <p>Galpões logísticos premium.</p>
+    </div>
 
-<div class="preco">
-R$ 10.42
-</div>
+    <div class="card">
+      <div class="fii">XPLG11</div>
+      <div class="dy">8.7% DY</div>
+      <p>Logística e crescimento constante.</p>
+    </div>
 
-<div class="rendimento">
-Dividend Yield 12.1%
-</div>
+    <div class="card">
+      <div class="fii">KNRI11</div>
+      <div class="dy">7.8% DY</div>
+      <p>Fundo corporativo sólido.</p>
+    </div>
 
-<div class="mini">
-<span>Risco: Baixo</span>
-<span>IA: Forte</span>
-</div>
+  </div>
 
-<canvas class="grafico"></canvas>
+  <div class="grafico">
+    <h2>Dividendos Mensais</h2>
+    <canvas id="graficoFiis"></canvas>
+  </div>
 
-</div>
+  <div class="noticias">
+    <h2>Radar do Mercado</h2>
 
-<div class="card">
+    <div class="noticia">• FIIs logísticos continuam em alta.</div>
+    <div class="noticia">• Fundos de papel seguem pagando dividendos fortes.</div>
+    <div class="noticia">• Mercado aguarda cortes de juros.</div>
+    <div class="noticia">• Vacância corporativa segue caindo.</div>
 
-<div class="nome">
-HGLG11
-</div>
+  </div>
 
-<div class="preco">
-R$ 164.30
-</div>
+  <script>
+    const ctx = document.getElementById('graficoFiis');
 
-<div class="rendimento">
-Dividend Yield 8.4%
-</div>
-
-<div class="mini">
-<span>Risco: Médio</span>
-<span>IA: Estável</span>
-</div>
-
-<canvas class="grafico"></canvas>
-
-</div>
-
-<div class="card">
-
-<div class="nome">
-XPLG11
-</div>
-
-<div class="preco">
-R$ 101.50
-</div>
-
-<div class="rendimento">
-Dividend Yield 9.2%
-</div>
-
-<div class="mini">
-<span>Risco: Médio</span>
-<span>IA: Compra</span>
-</div>
-
-<canvas class="grafico"></canvas>
-
-</div>
-
-</div>
-
-<div class="nav">
-<a href="/">Dashboard</a>
-<a href="/acoes">Ações</a>
-<a href="/fiis">FIIs</a>
-<a href="/ia">IA</a>
-</div>
-
-<script>
-
-const graficos =
-document.querySelectorAll(".grafico");
-
-graficos.forEach(grafico=>{
-
-const ctx =
-grafico.getContext("2d");
-
-ctx.strokeStyle="#22c55e";
-
-ctx.lineWidth=3;
-
-ctx.beginPath();
-
-ctx.moveTo(0,30);
-ctx.lineTo(20,22);
-ctx.lineTo(40,25);
-ctx.lineTo(60,12);
-ctx.lineTo(80,18);
-ctx.lineTo(100,5);
-
-ctx.stroke();
-
-});
-
-</script>
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+        datasets: [{
+          label: 'Dividendos',
+          data: [920, 980, 1100, 1250, 1310, 1400],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true
+      }
+    });
+  </script>
 
 </body>
 </html>
