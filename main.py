@@ -650,6 +650,7 @@ def gerar_pdf(mes: str = "", authorization: str = Header(default="")):
         media_type="application/pdf",
         headers={"Content-Disposition": "attachment; filename=relatorio-mrcontador.pdf"}
     )
+
 @app.get("/acoes", response_class=HTMLResponse)
 async def acoes(request: Request):
     return templates.TemplateResponse(
