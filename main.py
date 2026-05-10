@@ -671,8 +671,7 @@ async def ia(request: Request):
     return templates.TemplateResponse(
         "ia.html",
         {"request": request}
-)
-
+    )
 
 @app.post("/perguntar_ia")
 async def perguntar_ia(req: Request):
