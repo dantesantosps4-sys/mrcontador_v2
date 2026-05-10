@@ -1,5 +1,6 @@
 fastapi
 uvicorn
-python-multipart
-reportlab
 jinja2
+requests
+reportlab
+python-multipart
