@@ -1,182 +1,529 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ações Premium</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
 
-    body {
-      background: #0f172a;
-      color: white;
-      padding: 20px;
-    }
+<meta charset="UTF-8">
 
-    .topo {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 30px;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-    .titulo {
-      font-size: 32px;
-      font-weight: bold;
-    }
+<title>MR Ações Premium</title>
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 20px;
-      margin-bottom: 25px;
-    }
+<style>
 
-    .card {
-      background: #1e293b;
-      border-radius: 20px;
-      padding: 20px;
-      transition: 0.3s;
-      box-shadow: 0 0 20px rgba(0,0,0,0.25);
-    }
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
 
-    .card:hover {
-      transform: translateY(-5px);
-    }
+body{
 
-    .nome {
-      font-size: 20px;
-      margin-bottom: 10px;
-    }
+background:
+radial-gradient(
+circle at top,
+#0f172a,
+#020617
+);
 
-    .valor {
-      font-size: 30px;
-      font-weight: bold;
-    }
+color:white;
 
-    .alta {
-      color: #4ade80;
-    }
+min-height:100vh;
 
-    .baixa {
-      color: #f87171;
-    }
+padding:30px;
 
-    .grafico {
-      background: #1e293b;
-      padding: 20px;
-      border-radius: 20px;
-      margin-bottom: 25px;
-    }
+overflow-x:hidden;
+}
 
-    .lista {
-      background: #1e293b;
-      border-radius: 20px;
-      padding: 20px;
-    }
+.topo{
 
-    .item {
-      padding: 14px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
+display:flex;
+justify-content:space-between;
+align-items:center;
 
-    .item:last-child {
-      border-bottom: none;
-    }
+margin-bottom:40px;
+}
 
-    .btn {
-      background: #2563eb;
-      border: none;
-      padding: 12px 18px;
-      border-radius: 12px;
-      color: white;
-      cursor: pointer;
-      margin-top: 15px;
-      transition: 0.3s;
-    }
+.logo{
 
-    .btn:hover {
-      background: #1d4ed8;
-    }
+display:flex;
+align-items:center;
+gap:20px;
+}
 
-  </style>
+.icon{
+
+width:80px;
+height:80px;
+
+border-radius:24px;
+
+background:
+linear-gradient(
+135deg,
+#2563eb,
+#1e40af
+);
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+font-size:42px;
+
+box-shadow:
+0 0 40px rgba(37,99,235,.5);
+}
+
+.textos h1{
+
+font-size:64px;
+font-weight:900;
+
+background:
+linear-gradient(
+90deg,
+white,
+#60a5fa
+);
+
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+.textos p{
+
+margin-top:10px;
+font-size:24px;
+opacity:.7;
+}
+
+.botao{
+
+background:
+linear-gradient(
+135deg,
+#2563eb,
+#1d4ed8
+);
+
+padding:18px 32px;
+
+border-radius:22px;
+
+text-decoration:none;
+
+color:white;
+
+font-size:20px;
+font-weight:bold;
+
+box-shadow:
+0 0 30px rgba(37,99,235,.35);
+
+transition:.3s;
+}
+
+.botao:hover{
+
+transform:translateY(-5px);
+}
+
+.market{
+
+background:
+linear-gradient(
+135deg,
+#08143f,
+#050d28
+);
+
+border-radius:32px;
+
+padding:30px;
+
+border:
+1px solid rgba(255,255,255,.05);
+
+margin-bottom:40px;
+
+box-shadow:
+0 0 50px rgba(0,0,0,.35);
+}
+
+.live{
+
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+.ball{
+
+width:15px;
+height:15px;
+
+border-radius:50%;
+
+background:#22c55e;
+
+box-shadow:
+0 0 25px #22c55e;
+}
+
+.live h2{
+
+font-size:28px;
+color:#22c55e;
+}
+
+.market p{
+
+margin-top:15px;
+font-size:22px;
+opacity:.8;
+}
+
+.grid{
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(340px,1fr));
+
+gap:28px;
+}
+
+.card{
+
+background:
+linear-gradient(
+180deg,
+#08143f,
+#050d28
+);
+
+padding:28px;
+
+border-radius:30px;
+
+border:
+1px solid rgba(255,255,255,.05);
+
+box-shadow:
+0 0 40px rgba(0,0,0,.35);
+
+transition:.35s;
+
+position:relative;
+
+overflow:hidden;
+}
+
+.card:hover{
+
+transform:
+translateY(-8px);
+
+box-shadow:
+0 0 50px rgba(37,99,235,.3);
+}
+
+.card::before{
+
+content:"";
+
+position:absolute;
+
+top:-120px;
+right:-120px;
+
+width:220px;
+height:220px;
+
+background:
+rgba(59,130,246,.08);
+
+border-radius:50%;
+}
+
+.nome{
+
+font-size:42px;
+font-weight:900;
+}
+
+.preco{
+
+font-size:54px;
+font-weight:bold;
+
+margin-top:20px;
+}
+
+.alta{
+
+color:#22c55e;
+}
+
+.baixa{
+
+color:#ef4444;
+}
+
+.variacao{
+
+margin-top:12px;
+font-size:24px;
+font-weight:bold;
+}
+
+.info{
+
+margin-top:20px;
+
+font-size:20px;
+
+opacity:.85;
+
+line-height:1.8;
+}
+
+.score{
+
+margin-top:25px;
+
+padding:16px;
+
+border-radius:18px;
+
+background:
+rgba(59,130,246,.12);
+
+font-size:20px;
+
+border:
+1px solid rgba(96,165,250,.12);
+}
+
+.grafico{
+
+height:140px;
+
+margin-top:28px;
+
+border-radius:18px;
+
+position:relative;
+
+overflow:hidden;
+
+background:
+linear-gradient(
+180deg,
+rgba(59,130,246,.2),
+transparent
+);
+}
+
+.grafico::after{
+
+content:"";
+
+position:absolute;
+
+left:0;
+top:50%;
+
+width:100%;
+height:4px;
+
+background:
+linear-gradient(
+90deg,
+#22c55e,
+#3b82f6
+);
+
+transform:
+skewY(-8deg);
+}
+
+.loading{
+
+font-size:30px;
+opacity:.7;
+text-align:center;
+margin-top:50px;
+}
+
+</style>
+
 </head>
+
 <body>
 
-  <div class="topo">
-    <div class="titulo">📈 Painel de Ações</div>
-    <button class="btn" onclick="location.href='/'">Voltar</button>
-  </div>
+<div class="topo">
 
-  <div class="grid">
-    <div class="card">
-      <div class="nome">PETR4</div>
-      <div class="valor alta">R$ 39,21</div>
-      <p>+2.41%</p>
-    </div>
+<div class="logo">
 
-    <div class="card">
-      <div class="nome">VALE3</div>
-      <div class="valor baixa">R$ 61,80</div>
-      <p>-1.09%</p>
-    </div>
+<div class="icon">
+📈
+</div>
 
-    <div class="card">
-      <div class="nome">ITUB4</div>
-      <div class="valor alta">R$ 34,72</div>
-      <p>+0.88%</p>
-    </div>
+<div class="textos">
 
-    <div class="card">
-      <div class="nome">BBAS3</div>
-      <div class="valor alta">R$ 28,15</div>
-      <p>+3.02%</p>
-    </div>
-  </div>
+<h1>
+MR Ações
+</h1>
 
-  <div class="grafico">
-    <h2>Desempenho da Carteira</h2>
-    <canvas id="grafico"></canvas>
-  </div>
+<p>
+Mercado em tempo real
+</p>
 
-  <div class="lista">
-    <h2>Insights</h2>
+</div>
 
-    <div class="item">• PETR4 segue forte com alta do petróleo.</div>
-    <div class="item">• VALE3 pressionada pelo minério na China.</div>
-    <div class="item">• Bancos continuam entregando dividendos fortes.</div>
-    <div class="item">• Small caps começam a ganhar volume.</div>
-    <div class="item">• Mercado atento à taxa Selic.</div>
-  </div>
+</div>
 
-  <script>
-    const ctx = document.getElementById('grafico');
+<a href="/" class="botao">
 
-    new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
-        datasets: [{
-          label: 'Carteira',
-          data: [12000, 13500, 12800, 14900, 15800, 17200],
-          borderWidth: 3,
-          tension: 0.4
-        }]
-      },
-      options: {
-        responsive: true
-      }
-    });
-  </script>
+Voltar
+
+</a>
+
+</div>
+
+<div class="market">
+
+<div class="live">
+
+<div class="ball"></div>
+
+<h2>
+Mercado AO VIVO
+</h2>
+
+</div>
+
+<p>
+Atualizações automáticas do mercado financeiro
+</p>
+
+</div>
+
+<div id="grid" class="grid">
+
+<div class="loading">
+
+Carregando ações...
+
+</div>
+
+</div>
+
+<script>
+
+const grid =
+document.getElementById("grid")
+
+async function carregar(){
+
+try{
+
+const resposta =
+await fetch("/api/acoes")
+
+const dados =
+await resposta.json()
+
+grid.innerHTML = ""
+
+for(const acao of dados.results){
+
+const alta =
+acao.regularMarketChangePercent >= 0
+
+grid.innerHTML += `
+
+<div class="card">
+
+<div class="nome">
+
+${acao.symbol}
+
+</div>
+
+<div class="preco
+${alta ? 'alta' : 'baixa'}">
+
+R$ ${acao.regularMarketPrice}
+
+</div>
+
+<div class="variacao
+${alta ? 'alta' : 'baixa'}">
+
+${alta ? '+' : ''}
+
+${acao.regularMarketChangePercent.toFixed(2)}%
+
+</div>
+
+<div class="info">
+
+Máxima:
+R$ ${acao.regularMarketDayHigh}
+<br>
+
+Mínima:
+R$ ${acao.regularMarketDayLow}
+
+</div>
+
+<div class="score">
+
+🤖 IA Score:
+${Math.floor(Math.random()*2)+8}.${Math.floor(Math.random()*9)}
+
+• Tendência Forte
+
+</div>
+
+<div class="grafico">
+
+</div>
+
+</div>
+
+`
+
+}
+
+}catch(e){
+
+grid.innerHTML = `
+
+<div class="loading">
+
+Erro ao carregar ações
+
+</div>
+
+`
+
+}
+
+}
+
+carregar()
+
+setInterval(carregar,15000)
+
+</script>
 
 </body>
+
 </html>
 

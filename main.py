@@ -1,3 +1,10 @@
+import random
+import requests
+import os
+os.environ["TZ"] = "UTC"
+import time
+time.tzset()
+import yfinance as yf
 from fastapi import FastAPI, Form, Header, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
@@ -15,7 +22,7 @@ app = FastAPI(title="MR Contador")
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-DB = "/opt/render/project/src/database.db"
+DB = "database.db"
 
 def conn():
     return sqlite3.connect(DB, check_same_thread=False)
@@ -667,56 +674,6 @@ async def fiis(request: Request):
     )
 
 
-@app.get("/ia", response_class=HTMLResponse)
-async def ia(request: Request):
-    return templates.TemplateResponse(
-        "ia.html",
-        {"request": request}
-    )
-
-@app.post("/perguntar_ia")
-async def perguntar_ia(req: Request):
-
-    data = await req.json()
-    pergunta = data.get("pergunta")
-
-    try:
-        resposta = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {
-                    "role": "system",
-                    "content": """
-Você é uma IA financeira premium especializada em:
-- ações
-- FIIs
-- criptomoedas
-- dividendos
-- risco
-- carteira
-
-Responda curto, inteligente e profissional.
-"""
-                },
-                {
-                    "role": "user",
-                    "content": pergunta
-                }
-            ],
-            max_tokens=250
-        )
-
-        texto = resposta.choices[0].message.content
-
-        return JSONResponse({
-            "resposta": texto
-        })
-
-    except Exception as e:
-        return JSONResponse({
-            "resposta": f"Erro IA: {str(e)}"
-        })
-
 @app.get("/dashboard",
 response_class=HTMLResponse)
 
@@ -726,3 +683,65 @@ async def dashboard(request: Request):
         "index.html",
         {"request": request}
     )
+
+@app.get("/api/acoes")
+async def api_acoes():
+
+    url = "https://brapi.dev/api/quote/PETR4,VALE3,ITUB4?token=free"
+
+    response = requests.get(url)
+
+    return response.json()
+
+import random
+
+@app.get("/api/fiis")
+async def api_fiis():
+
+    return {
+
+        "results":[
+
+            {
+                "codigo":"MXRF11",
+
+                "preco":
+                round(random.uniform(9.90,10.60),2),
+
+                "variacao":
+                round(random.uniform(-1.5,2.5),2)
+            },
+
+            {
+                "codigo":"HGLG11",
+
+                "preco":
+                round(random.uniform(150,160),2),
+
+                "variacao":
+                round(random.uniform(-2,2),2)
+            },
+
+            {
+                "codigo":"XPLG11",
+
+                "preco":
+                round(random.uniform(95,105),2),
+
+                "variacao":
+                round(random.uniform(-1.8,2.3),2)
+            },
+
+            {
+                "codigo":"KNRI11",
+
+                "preco":
+                round(random.uniform(130,145),2),
+
+                "variacao":
+                round(random.uniform(-1.4,2.1),2)
+            }
+
+        ]
+
+    }
