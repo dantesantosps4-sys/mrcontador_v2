@@ -299,52 +299,110 @@ function abrir(id){
 }
 
 async function carregarRadar(){
-    radarLista.innerHTML = "<p class='muted'>Carregando criptos...</p>";
 
-    try{
-        const r = await fetch("/radar-cripto");
-        const d = await r.json();
+const radarLista = document.getElementById("radarLista")
 
-        if(!d.ok){
-            radarLista.innerHTML = "<div class='notice'>Erro ao carregar radar.</div>";
-            return;
-        }
+radarLista.innerHTML = `
+<p class="muted">Carregando criptos...</p>
+`;
 
-        radarLista.innerHTML = "";
+try{
 
-        d.moedas.forEach(m => {
-            const classe24 = m.var24 >= 0 ? "positivo" : "negativo";
-            const classe7 = m.var7 >= 0 ? "positivo" : "negativo";
+const r = await fetch("/radar-cripto");
 
-            radarLista.innerHTML += `
-                <div class="cryptoCard">
-                    <div class="cryptoHeader">
-                        <div>
-                            <h3>${m.nome || "Cripto"} <span>(${m.simbolo})</span></h3>
-                            <strong>${dinheiro(m.preco)}</strong>
-                        </div>
-                        <span class="badge">${m.tendencia}</span>
-                    </div>
+if(!r.ok){
+throw new Error("Erro na API");
+}
 
-                    <div class="cryptoGrid">
-                        <div><small>Variação 24h</small><b class="${classe24}">${m.var24.toFixed(2)}%</b></div>
-                        <div><small>Variação 7d</small><b class="${classe7}">${m.var7.toFixed(2)}%</b></div>
-                        <div><small>Risco</small><b>${m.risco}</b></div>
-                    </div>
+const d = await r.json();
 
-                    <div class="aiText">
-                        <b>🤖 Análise da IA:</b><br>
-                        ${m.explicacao}
-                    </div>
+if(!d.moedas || d.moedas.length === 0){
+radarLista.innerHTML = `
+<div class="notice">
+Nenhuma cripto encontrada.
+</div>
+`;
+return;
+}
 
-                    <p class="muted avisoInvest">⚠️ Informação educativa. Não é recomendação de compra ou venda.</p>
-                </div>
-            `;
-        });
+radarLista.innerHTML = "";
 
-    }catch(e){
-        radarLista.innerHTML = "<div class='notice'>Erro geral ao carregar radar.</div>";
-    }
+d.moedas.forEach(m => {
+
+const cor24 = m.var24 >= 0 ? "positivo" : "negativo";
+const cor7 = m.var7 >= 0 ? "positivo" : "negativo";
+
+radarLista.innerHTML += `
+
+<div class="cryptoCard">
+
+<div class="cryptoHeader">
+
+<div>
+<h3>${m.nome} <span>(${m.simbolo})</span></h3>
+<strong>${dinheiro(m.preco)}</strong>
+</div>
+
+<div class="badge ${m.tendencia}">
+${m.tendencia}
+</div>
+
+</div>
+
+<div class="cryptoGrid">
+
+<div>
+<small>Variação 24h</small>
+<b class="${cor24}">
+${m.var24}%
+</b>
+</div>
+
+<div>
+<small>Variação 7d</small>
+<b class="${cor7}">
+${m.var7}%
+</b>
+</div>
+
+<div>
+<small>Risco</small>
+<b>${m.risco}</b>
+</div>
+
+</div>
+
+<div class="iaBox">
+<div class="iaText">
+<b>🤖 Análise da IA:</b><br>
+${m.explicacao}
+</div>
+</div>
+
+<p class="avisoInvest">
+⚠️ Informação educativa.
+</p>
+
+</div>
+
+`;
+
+});
+
+}catch(e){
+
+console.log(e);
+
+radarLista.innerHTML = `
+
+<div class="notice">
+Erro ao carregar criptos.
+</div>
+
+`;
+
+}
+
 }
 
 async function baixarPDF(){
