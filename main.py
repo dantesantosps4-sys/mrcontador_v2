@@ -652,7 +652,6 @@ def gerar_pdf(mes: str = "", authorization: str = Header(default="")):
     )
 @app.get("/acoes", response_class=HTMLResponse)
 async def acoes(request: Request):
-
     return templates.TemplateResponse(
         "acoes.html",
         {"request": request}
@@ -661,7 +660,6 @@ async def acoes(request: Request):
 
 @app.get("/fiis", response_class=HTMLResponse)
 async def fiis(request: Request):
-
     return templates.TemplateResponse(
         "fiis.html",
         {"request": request}
@@ -670,39 +668,11 @@ async def fiis(request: Request):
 
 @app.get("/ia", response_class=HTMLResponse)
 async def ia(request: Request):
-
     return templates.TemplateResponse(
         "ia.html",
         {"request": request}
 )
-@app.post("/perguntar-ia")
-async def perguntar_ia(data: dict):
 
-    pergunta = data.get("pergunta")
-
-    resposta = client.chat.completions.create(
-        model="gpt-4.1-mini",
-
-        messages=[
-
-            {
-                "role":"system",
-                "content":"Você é um analista financeiro profissional especialista em ações, FIIs e criptomoedas. Responda curto, moderno e inteligente."
-            },
-
-            {
-                "role":"user",
-                "content":pergunta
-            }
-
-        ]
-
-    )
-
-    return {
-        "resposta":
-        resposta.choices[0].message.content
-    }
 
 @app.post("/perguntar_ia")
 async def perguntar_ia(req: Request):
