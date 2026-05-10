@@ -89,11 +89,31 @@
 </div>
 
 <div id="radar" class="page">
-<section class="card">
-    <h2>Radar de Criptos</h2>
-    <p class="muted">Acompanhe moedas em tempo real com explicação automática da IA. Não é recomendação de compra.</p>
-    <button onclick="carregarRadar()">Atualizar radar</button>
-    <div id="radarLista"></div>
+
+<h2>Radar Inteligente</h2>
+
+<p class="muted">
+Escolha um mercado para analisar em tempo real.
+</p>
+
+<div class="radarMenu">
+
+<button onclick="carregarRadar()">
+₿ Cripto
+</button>
+
+<button onclick="abrirRadarFiis()">
+🏢 FIIs
+</button>
+
+<button onclick="abrirRadarAcoes()">
+📈 Ações
+</button>
+
+</div>
+
+<div id="radarLista"></div>
+
 </section>
 </div>
 
@@ -350,31 +370,306 @@ async function baixarPDF(){
 if(token && usernameAtual){
     mostrarApp();
 }
-</script>
-<script>
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/static/sw.js");
+
+
+function abrirRadarFiis(){
+
+const radar = document.getElementById("radarLista")
+
+radar.innerHTML = `
+
+<div class="card-market">
+
+<div class="top-market">
+<h2>FIIs <span>(MXRF11)</span></h2>
+<div class="badge neutra">neutra</div>
+</div>
+
+<h1 class="green">R$ 10,18</h1>
+
+<p>Dividend Yield <b>12.4%</b></p>
+<p>Vacância <b>baixa</b></p>
+
+<div class="iaBox">
+<div class="iaText">
+<b>🤖 Análise da IA:</b><br>
+Fundo imobiliário com estabilidade nos dividendos e bom volume.
+</div>
+</div>
+
+<p class="avisoInvest">
+⚠️ Informação educativa.
+</p>
+
+</div>
+
+<div class="card-market">
+
+<div class="top-market">
+<h2>FIIs <span>(HGLG11)</span></h2>
+<div class="badge forte">forte</div>
+</div>
+
+<h1 class="green">R$ 158,40</h1>
+
+<p>Dividend Yield <b>8.2%</b></p>
+<p>Vacância <b>muito baixa</b></p>
+
+<div class="iaBox">
+<div class="iaText">
+<b>🤖 Análise da IA:</b><br>
+Galpões logísticos com alta ocupação e tendência positiva.
+</div>
+</div>
+
+<p class="avisoInvest">
+⚠️ Informação educativa.
+</p>
+
+</div>
+
+<div class="card-market">
+
+<div class="top-market">
+<h2>FIIs <span>(XPML11)</span></h2>
+<div class="badge forte">forte</div>
+</div>
+
+<h1 class="green">R$ 103,52</h1>
+
+<p>Dividend Yield <b>9.8%</b></p>
+<p>Vacância <b>baixa</b></p>
+
+<div class="iaBox">
+<div class="iaText">
+<b>🤖 Análise da IA:</b><br>
+Fundo de shoppings com recuperação consistente e forte fluxo.
+</div>
+</div>
+
+<p class="avisoInvest">
+⚠️ Informação educativa.
+</p>
+
+</div>
+
+<div class="card-market">
+
+<div class="top-market">
+<h2>FIIs <span>(KNRI11)</span></h2>
+<div class="badge neutra">neutra</div>
+</div>
+
+<h1 class="green">R$ 148,20</h1>
+
+<p>Dividend Yield <b>7.4%</b></p>
+<p>Vacância <b>muito baixa</b></p>
+
+<div class="iaBox">
+<div class="iaText">
+<b>🤖 Análise da IA:</b><br>
+Carteira sólida com contratos longos e estabilidade.
+</div>
+</div>
+
+<p class="avisoInvest">
+⚠️ Informação educativa.
+</p>
+
+</div>
+
+<div class="card-market">
+
+<div class="top-market">
+<h2>FIIs <span>(VISC11)</span></h2>
+<div class="badge forte">forte</div>
+</div>
+
+<h1 class="green">R$ 118,44</h1>
+
+<p>Dividend Yield <b>10.1%</b></p>
+<p>Vacância <b>baixa</b></p>
+
+<div class="iaBox">
+<div class="iaText">
+<b>🤖 Análise da IA:</b><br>
+Ativos comerciais em crescimento com boa valorização.
+</div>
+</div>
+
+<p class="avisoInvest">
+⚠️ Informação educativa.
+</p>
+
+</div>
+
+`;
+}
+
+function abrirRadarAcoes(){
+
+const radar = document.getElementById("radarLista");
+
+radar.innerHTML = `
+
+<div class="card-market">
+
+<div class="top-market">
+<h2>Ações <span>(PETR4)</span></h2>
+<div class="badge forte">forte</div>
+</div>
+
+<h1 class="green">R$ 36,24</h1>
+
+<p>Variação 24h <b>+1.8%</b></p>
+<p>Risco <b>médio</b></p>
+
+<div class="iaBox">
+<div class="iaText">
+<b>🤖 Análise da IA:</b><br>
+Ação com boa movimentação no curto prazo e forte volume comprador.
+</div>
+</div>
+
+<p class="avisoInvest">
+⚠️ Informação educativa.
+</p>
+
+</div>
+
+<div class="card-market">
+
+<div class="top-market">
+<h2>Ações <span>(VALE3)</span></h2>
+<div class="badge neutra">neutra</div>
+</div>
+
+<h1 class="green">R$ 61,10</h1>
+
+<p>Variação 24h <b>-0.9%</b></p>
+<p>Risco <b>médio</b></p>
+
+<div class="iaBox">
+<div class="iaText">
+<b>🤖 Análise da IA:</b><br>
+Mercado ainda indefinido. Pode acompanhar próximos movimentos.
+</div>
+</div>
+
+<p class="avisoInvest">
+⚠️ Informação educativa.
+</p>
+
+</div>
+
+<div class="card-market">
+
+<div class="top-market">
+<h2>Ações <span>(ITUB4)</span></h2>
+<div class="badge forte">forte</div>
+</div>
+
+<h1 class="green">R$ 33,88</h1>
+
+<p>Variação 24h <b>+2.4%</b></p>
+<p>Risco <b>baixo</b></p>
+
+<div class="iaBox">
+<div class="iaText">
+<b>🤖 Análise da IA:</b><br>
+Banco com tendência positiva e forte entrada institucional.
+</div>
+</div>
+
+<p class="avisoInvest">
+⚠️ Informação educativa.
+</p>
+
+</div>
+
+<div class="card-market">
+
+<div class="top-market">
+<h2>Ações <span>(BBAS3)</span></h2>
+<div class="badge forte">forte</div>
+</div>
+
+<h1 class="green">R$ 28,14</h1>
+
+<p>Variação 24h <b>+1.7%</b></p>
+<p>Risco <b>baixo</b></p>
+
+<div class="iaBox">
+<div class="iaText">
+<b>🤖 Análise da IA:</b><br>
+Boa estabilidade financeira e continuidade de alta.
+</div>
+</div>
+
+<p class="avisoInvest">
+⚠️ Informação educativa.
+</p>
+
+</div>
+
+<div class="card-market">
+
+<div class="top-market">
+<h2>Ações <span>(WEGE3)</span></h2>
+<div class="badge neutra">neutra</div>
+</div>
+
+<h1 class="green">R$ 54,77</h1>
+
+<p>Variação 24h <b>-0.4%</b></p>
+<p>Risco <b>médio</b></p>
+
+<div class="iaBox">
+<div class="iaText">
+<b>🤖 Análise da IA:</b><br>
+Mercado consolidando após sequência de altas recentes.
+</div>
+</div>
+
+<p class="avisoInvest">
+⚠️ Informação educativa.
+</p>
+
+</div>
+
+<div class="card-market">
+
+<div class="top-market">
+<h2>Ações <span>(BBDC4)</span></h2>
+<div class="badge neutra">neutra</div>
+</div>
+
+<h1 class="green">R$ 16,92</h1>
+
+<p>Variação 24h <b>+0.6%</b></p>
+<p>Risco <b>médio</b></p>
+
+<div class="iaBox">
+<div class="iaText">
+<b>🤖 Análise da IA:</b><br>
+Papel buscando retomada gradual no curto prazo.
+</div>
+</div>
+
+<p class="avisoInvest">
+⚠️ Informação educativa.
+</p>
+
+</div>
+`;
 }
 </script>
-<div class="atalhos">
 
-<a href="/acoes" class="atalho-card">
-<div class="icone">📈</div>
-<div>
-<h3>Ações</h3>
-<p>Mercado em tempo real</p>
-</div>
-</a>
-
-<a href="/fiis" class="atalho-card">
-<div class="icone">🏢</div>
-<div>
-<h3>FIIs</h3>
-<p>Fundos imobiliários</p>
-</div>
-</a>
-
-
+<script>
+if ("serviceWorker" in navigator) {
+navigator.serviceWorker.register("/static/sw.js");
+}
+</script>
 </div>
 </body>
 </html>
