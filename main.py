@@ -650,7 +650,6 @@ def gerar_pdf(mes: str = "", authorization: str = Header(default="")):
         media_type="application/pdf",
         headers={"Content-Disposition": "attachment; filename=relatorio-mrcontador.pdf"}
     )
-
 @app.get("/acoes", response_class=HTMLResponse)
 async def acoes(request: Request):
 
@@ -675,22 +674,7 @@ async def ia(request: Request):
     return templates.TemplateResponse(
         "ia.html",
         {"request": request}
-    )
-
-@app.get("/fiis", response_class=HTMLResponse)
-async def fiis(request: Request):
-    return templates.TemplateResponse(
-        "fiis.html",
-        {"request": request}
-    )
-
-@app.get("/ia", response_class=HTMLResponse)
-async def ia(request: Request):
-    return templates.TemplateResponse(
-        "ia.html",
-        {"request": request}
-    )
-
+)
 @app.post("/perguntar-ia")
 async def perguntar_ia(data: dict):
 
