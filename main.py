@@ -15,7 +15,7 @@ app = FastAPI(title="MR Contador")
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-DB = "/tmp/database.db"
+DB = "/opt/render/project/src/database.db"
 
 def conn():
     return sqlite3.connect(DB, check_same_thread=False)
